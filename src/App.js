@@ -9,6 +9,10 @@ class App extends React.Component {
         super(props);
         this.port = 3001;
         this.socket = openSocket(`http://localhost:${this.port}`);
+
+        this.socket.on('message', function(msg){
+            console.log(msg)
+        });
     }
 
     render() {
