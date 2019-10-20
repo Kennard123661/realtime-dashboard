@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import openSocket from 'socket.io-client';
 
 
-class App extends Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
-        this.port = 8000;
+        this.port = 3001;
         this.socket = openSocket(`http://localhost:${this.port}`);
     }
 
