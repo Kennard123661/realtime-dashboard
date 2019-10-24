@@ -13,6 +13,10 @@ class App extends React.Component {
         this.socket.on('message', function(msg){
             console.log(msg)
         });
+
+        this.socket.on('change', function(msg) {
+            console.log(msg)
+        })
     }
 
     render() {
