@@ -2,26 +2,51 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import openSocket from 'socket.io-client';
+import Chart from 'react-apexcharts'
 
-
-const nData = 1000;
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            items: [],
-            dropdownOptions: [],
-            selectedValue: null,
-            amRevenue: null,
-            ebRevenue: null,
-            etRevenue: null,
-            totalRevenue: null,
-            productViews: null,
-            purchaseRate: " ",
-            checkoutRate: " ",
-            abandonedRate: " ",
-            ordersTrendStore: [],
+            options: {
+                chart: {
+                    id: 'apexchart-eg',
+                    type: 'line',
+                    height: 500,
+                    width: 500,
+                    animations: {
+                        enabled: true,
+                        easing: 'linear',
+                        dynamicAnimation: {
+                            speed: 1000
+                        }
+                    },
+                    toolbar: {
+                        show: false,
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+
+                stroke: {
+                    curve: 'smooth'
+                },
+
+                xaxis: {
+                    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
+                },
+
+                yaxis: {
+                    max: 1.2,
+                    min: -1.2
+                }
+            },
+            series: [{
+                name: 'series-1',
+                data: [-0.5, 0.5, 1, -1, -0.4, 0.4, -0.3, -0.2]
+            }],
 
             dancerData: {
                 timestamp: [],
@@ -54,7 +79,6 @@ class App extends React.Component {
             }
         };
 
-        this.nData = nData;
         this.port = 3001;
     }
 
@@ -126,18 +150,8 @@ class App extends React.Component {
         return (
             <div className="App">
                 <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
+                    <h1>CG4002 Dashboard</h1>
+                    <Chart options={this.state.options} series={this.state.series} height={500} width={1000}/>
                 </header>
             </div>
         );
