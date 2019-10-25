@@ -3,15 +3,49 @@ import logo from './logo.svg';
 import './App.css';
 import openSocket from 'socket.io-client';
 import Chart from 'react-apexcharts'
+import ApexCharts from 'apexcharts'
+
+let data = [];
+let timestamp = 0;
+const DISPLAY_LENGTH = 10;
+
+
+function initializeData() {
+    let i;
+    for (i = 0; i < DISPLAY_LENGTH; i++) {
+        data.push({
+            x: timestamp,
+            y: 0
+        });
+        timestamp += 1;
+    }
+}
+initializeData();
+
+
+function updateData(dataPoint) {
+    let i = 0;
+    for (i = 0; i < data.length - DISPLAY_LENGTH; i++) {
+        data[i].x  = timestamp - DISPLAY_LENGTH - 1;
+        data[i].y = 0
+    }
+
+    data.push({
+        x: timestamp,
+        y: dataPoint
+    });
+    timestamp += 1;
+}
 
 
 class App extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             options: {
                 chart: {
-                    id: 'apexchart-eg',
+                    id: 'realtime',
                     type: 'line',
                     height: 500,
                     width: 500,
@@ -29,23 +63,28 @@ class App extends React.Component {
                         enabled: false
                     }
                 },
+                dataLabels: {
+                    enabled: false
+                },
+
+                xaxis: {
+                    range: DISPLAY_LENGTH,
+                    tickAmount: DISPLAY_LENGTH
+                },
 
                 stroke: {
                     curve: 'smooth'
                 },
 
-                xaxis: {
-                    categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-                },
-
                 yaxis: {
                     max: 1.2,
-                    min: -1.2
+                    min: -1.2,
+                    decimalsInFloat: 2
                 }
             },
             series: [{
-                name: 'series-1',
-                data: [-0.5, 0.5, 1, -1, -0.4, 0.4, -0.3, -0.2]
+                name: 'dancer-1',
+                data: data
             }],
 
             dancerData: {
@@ -82,6 +121,16 @@ class App extends React.Component {
         this.port = 3001;
     }
 
+    setUpdateIntervals() {
+        const appComponent = this;
+        window.setInterval(() => {
+            updateData(Math.random() * 2 - 1);
+            ApexCharts.exec('realtime', 'updateSeries', [{
+                data: data
+            }])
+        }, 1000)
+    };
+
     componentDidMount() {
         const appComponent = this;
         this.socket = openSocket(`http://localhost:${this.port}`);
@@ -94,56 +143,49 @@ class App extends React.Component {
             console.log(updateData);
             appComponent.updateDashboard(updateData);
             console.log(appComponent.state);
-        })
+        });
+
+        console.log(data);
+        this.setUpdateIntervals();
     }
 
     updateDashboard(data) {
         const prevState = this.state;
-        this.setState({
-            items: [],
-            dropdownOptions: [],
-            selectedValue: null,
-            amRevenue: null,
-            ebRevenue: null,
-            etRevenue: null,
-            totalRevenue: null,
-            productViews: null,
-            purchaseRate: " ",
-            checkoutRate: " ",
-            abandonedRate: " ",
-            ordersTrendStore: [],
+        let newState = prevState;
+        newState['dancerData'] = {
+            timestamp: prevState.dancerData.timestamp.concat(data.timestamp),
 
-            dancerData: {
-                timestamp: prevState.dancerData.timestamp.concat(data.timestamp),
+            dancer1: {
+                ax: prevState.dancerData.dancer1.ax.concat(data.dancer1.ax),
+                ay: prevState.dancerData.dancer1.ay.concat(data.dancer1.ay),
+                az: prevState.dancerData.dancer1.az.concat(data.dancer1.az),
+                gx: prevState.dancerData.dancer1.gx.concat(data.dancer1.gx),
+                gy: prevState.dancerData.dancer1.gy.concat(data.dancer1.gy),
+                gz: prevState.dancerData.dancer1.gz.concat(data.dancer1.gz)
+            },
 
-                dancer1: {
-                    ax: prevState.dancerData.dancer1.ax.concat(data.dancer1.ax),
-                    ay: prevState.dancerData.dancer1.ay.concat(data.dancer1.ay),
-                    az: prevState.dancerData.dancer1.az.concat(data.dancer1.az),
-                    gx: prevState.dancerData.dancer1.gx.concat(data.dancer1.gx),
-                    gy: prevState.dancerData.dancer1.gy.concat(data.dancer1.gy),
-                    gz: prevState.dancerData.dancer1.gz.concat(data.dancer1.gz)
-                },
+            dancer2: {
+                ax: prevState.dancerData.dancer2.ax.concat(data.dancer2.ax),
+                ay: prevState.dancerData.dancer2.ay.concat(data.dancer2.ay),
+                az: prevState.dancerData.dancer2.az.concat(data.dancer2.az),
+                gx: prevState.dancerData.dancer2.gx.concat(data.dancer2.gx),
+                gy: prevState.dancerData.dancer2.gy.concat(data.dancer2.gy),
+                gz: prevState.dancerData.dancer2.gz.concat(data.dancer2.gz)
+            },
 
-                dancer2: {
-                    ax: prevState.dancerData.dancer2.ax.concat(data.dancer2.ax),
-                    ay: prevState.dancerData.dancer2.ay.concat(data.dancer2.ay),
-                    az: prevState.dancerData.dancer2.az.concat(data.dancer2.az),
-                    gx: prevState.dancerData.dancer2.gx.concat(data.dancer2.gx),
-                    gy: prevState.dancerData.dancer2.gy.concat(data.dancer2.gy),
-                    gz: prevState.dancerData.dancer2.gz.concat(data.dancer2.gz)
-                },
-
-                dancer3: {
-                    ax: prevState.dancerData.dancer3.ax.concat(data.dancer3.ax),
-                    ay: prevState.dancerData.dancer3.ay.concat(data.dancer3.ay),
-                    az: prevState.dancerData.dancer3.az.concat(data.dancer3.az),
-                    gx: prevState.dancerData.dancer3.gx.concat(data.dancer3.gx),
-                    gy: prevState.dancerData.dancer3.gy.concat(data.dancer3.gy),
-                    gz: prevState.dancerData.dancer3.gz.concat(data.dancer3.gz)
-                }
+            dancer3: {
+                ax: prevState.dancerData.dancer3.ax.concat(data.dancer3.ax),
+                ay: prevState.dancerData.dancer3.ay.concat(data.dancer3.ay),
+                az: prevState.dancerData.dancer3.az.concat(data.dancer3.az),
+                gx: prevState.dancerData.dancer3.gx.concat(data.dancer3.gx),
+                gy: prevState.dancerData.dancer3.gy.concat(data.dancer3.gy),
+                gz: prevState.dancerData.dancer3.gz.concat(data.dancer3.gz)
             }
-        });
+        };
+
+        newState['series'][0].data.push(data.dancer1.ax)
+        this.setState(newState)
+        updateData(data.dancer1.ax)
     }
 
     render() {
