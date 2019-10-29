@@ -124,7 +124,7 @@ class App extends React.Component {
     setUpdateIntervals() {
         const appComponent = this;
         window.setInterval(() => {
-            updateData(Math.random() * 2 - 1);
+            // updateData(Math.random() * 2 - 1);
             ApexCharts.exec('realtime', 'updateSeries', [{
                 data: data
             }])
@@ -149,43 +149,42 @@ class App extends React.Component {
         this.setUpdateIntervals();
     }
 
-    updateDashboard(data) {
+    updateDashboard(newData) {
         const prevState = this.state;
         let newState = prevState;
         newState['dancerData'] = {
-            timestamp: prevState.dancerData.timestamp.concat(data.timestamp),
+            timestamp: prevState.dancerData.timestamp.concat(newData.timestamp),
 
             dancer1: {
-                ax: prevState.dancerData.dancer1.ax.concat(data.dancer1.ax),
-                ay: prevState.dancerData.dancer1.ay.concat(data.dancer1.ay),
-                az: prevState.dancerData.dancer1.az.concat(data.dancer1.az),
-                gx: prevState.dancerData.dancer1.gx.concat(data.dancer1.gx),
-                gy: prevState.dancerData.dancer1.gy.concat(data.dancer1.gy),
-                gz: prevState.dancerData.dancer1.gz.concat(data.dancer1.gz)
+                ax: prevState.dancerData.dancer1.ax.concat(newData.dancer1.ax),
+                ay: prevState.dancerData.dancer1.ay.concat(newData.dancer1.ay),
+                az: prevState.dancerData.dancer1.az.concat(newData.dancer1.az),
+                gx: prevState.dancerData.dancer1.gx.concat(newData.dancer1.gx),
+                gy: prevState.dancerData.dancer1.gy.concat(newData.dancer1.gy),
+                gz: prevState.dancerData.dancer1.gz.concat(newData.dancer1.gz)
             },
 
             dancer2: {
-                ax: prevState.dancerData.dancer2.ax.concat(data.dancer2.ax),
-                ay: prevState.dancerData.dancer2.ay.concat(data.dancer2.ay),
-                az: prevState.dancerData.dancer2.az.concat(data.dancer2.az),
-                gx: prevState.dancerData.dancer2.gx.concat(data.dancer2.gx),
-                gy: prevState.dancerData.dancer2.gy.concat(data.dancer2.gy),
-                gz: prevState.dancerData.dancer2.gz.concat(data.dancer2.gz)
+                ax: prevState.dancerData.dancer2.ax.concat(newData.dancer2.ax),
+                ay: prevState.dancerData.dancer2.ay.concat(newData.dancer2.ay),
+                az: prevState.dancerData.dancer2.az.concat(newData.dancer2.az),
+                gx: prevState.dancerData.dancer2.gx.concat(newData.dancer2.gx),
+                gy: prevState.dancerData.dancer2.gy.concat(newData.dancer2.gy),
+                gz: prevState.dancerData.dancer2.gz.concat(newData.dancer2.gz)
             },
 
             dancer3: {
-                ax: prevState.dancerData.dancer3.ax.concat(data.dancer3.ax),
-                ay: prevState.dancerData.dancer3.ay.concat(data.dancer3.ay),
-                az: prevState.dancerData.dancer3.az.concat(data.dancer3.az),
-                gx: prevState.dancerData.dancer3.gx.concat(data.dancer3.gx),
-                gy: prevState.dancerData.dancer3.gy.concat(data.dancer3.gy),
-                gz: prevState.dancerData.dancer3.gz.concat(data.dancer3.gz)
+                ax: prevState.dancerData.dancer3.ax.concat(newData.dancer3.ax),
+                ay: prevState.dancerData.dancer3.ay.concat(newData.dancer3.ay),
+                az: prevState.dancerData.dancer3.az.concat(newData.dancer3.az),
+                gx: prevState.dancerData.dancer3.gx.concat(newData.dancer3.gx),
+                gy: prevState.dancerData.dancer3.gy.concat(newData.dancer3.gy),
+                gz: prevState.dancerData.dancer3.gz.concat(newData.dancer3.gz)
             }
         };
-
-        newState['series'][0].data.push(data.dancer1.ax)
-        this.setState(newState)
-        updateData(data.dancer1.ax)
+        console.log(newData)
+        this.setState(newState);
+        updateData(newData.dancer1.ax)
     }
 
     render() {
